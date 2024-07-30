@@ -1,6 +1,9 @@
 package stages;
 
 //import flixel.FlxBasic;
+import flixel.FlxBasic;
+import flixel.FlxObject;
+import flixel.group.FlxGroup;
 import flixel.math.FlxPoint;
 
 /**
@@ -18,6 +21,9 @@ class BaseStage
     public var extraCameraMovementAmount:Null<Float> = null; //Leave null for PlayState default.
     public var cameraStartPosition:FlxPoint; //Leave null for PlayState default.
     public var globalCameraOffset:FlxPoint = new FlxPoint();
+    public var bfCameraOffset:FlxPoint = new FlxPoint();
+    public var dadCameraOffset:FlxPoint = new FlxPoint();
+    public var gfCameraOffset:FlxPoint = new FlxPoint();
     public var extraData:Map<String, Dynamic> = new Map<String, Dynamic>();
     public var events:Map<String, Void->Void> = new Map<String, Void->Void>();
 
@@ -25,7 +31,12 @@ class BaseStage
     public var middleElements:Array<Dynamic> = [];
     public var foregroundElements:Array<Dynamic> = [];
 
+    var updateGroup:FlxGroup = new FlxGroup();
+
     public var useStartPoints:Bool = true; //Auto positions characters if set to true
+    public var overrideBfStartPoints:Bool = false;  //Does the opposite of useStartPoints for this specific character.
+    public var overrideDadStartPoints:Bool = false; //Does the opposite of useStartPoints for this specific character.
+    public var overrideGfStartPoints:Bool = false;  //Does the opposite of useStartPoints for this specific character.
     public var dadStart:FlxPoint = new FlxPoint(314.5, 867);
     public var bfStart:FlxPoint = new FlxPoint(975.5, 862);
     public var gfStart:FlxPoint = new FlxPoint(751.5, 778);
@@ -90,6 +101,15 @@ class BaseStage
     }
 
     /**
+     * Add any object that will up updated in the stage's update loop.
+     *
+     * @param   obj     The object that will be added to the update loop.
+     */
+     public function addToUpdate(obj:FlxBasic){
+        updateGroup.add(obj);
+    }
+
+    /**
 	 * Destroys all objects added to the stage elements.
 	 */
     public function destroyAll(){
@@ -100,10 +120,15 @@ class BaseStage
 
     /**
 	 * Called every frame in PlayState update.
+	 * Don't forget to call `super.update(elasped)` or the update group won't be updated.
      *
      * @param   elpased  The elapsed time between previous frames passed in by PlayState.
 	 */
-    public function update(elapsed:Float){}
+    public function update(elapsed:Float){
+        for(obj in updateGroup){
+            obj.update(elapsed);
+        }
+    }
 
     /**
 	 * Called every beat hit in PlayState.
@@ -119,9 +144,15 @@ class BaseStage
 	 */
     public function step(curStep:Int){}
 
+    /**
+	 * Called once the song starts.
+	 */
+     public function songStart(){}
+
     inline function boyfriend()     { return PlayState.instance.boyfriend; }
     inline function gf()            { return PlayState.instance.gf; }
     inline function dad()           { return PlayState.instance.dad; }
     inline function playstate()     { return PlayState.instance; }
+    inline function tween()         { return PlayState.instance.tweenManager; }
 
 }

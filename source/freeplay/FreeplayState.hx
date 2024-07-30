@@ -190,6 +190,11 @@ class FreeplayState extends MusicBeatState
 		addSong("Guns", "tankman", 7, ["ALL", "Week 7"]);
 		addSong("Stress", "tankman", 7, ["ALL", "Week 7"]);
 
+		addSong("Darnell", "darnell", 101, ["ALL", "Weekend 1"]);
+		addSong("Lit-Up", "darnell", 101, ["ALL", "Weekend 1"]);
+		addSong("2hot", "darnell", 101, ["ALL", "Weekend 1"]);
+		addSong("Blazin", "darnell", 101, ["ALL", "Weekend 1"]);
+
 		//ERECT SONGS!!!!
 
 		addSong("Bopeebo-Erect", "dad", 1, ["ERECT", "Week 1"]);
@@ -203,7 +208,10 @@ class FreeplayState extends MusicBeatState
 		addSong("Philly-Erect", "pico", 3, ["ERECT", "Week 3"]);
 		addSong("Blammed-Erect", "pico", 3, ["ERECT", "Week 3"]);
 
+		addSong("Satin-Panties-Erect", "mom", 4, ["ERECT", "Week 4"]);
 		addSong("High-Erect", "mom", 4, ["ERECT", "Week 4"]);
+		
+		addSong("Eggnog-Erect", "parents-christmas", 5, ["ERECT", "Week 5"]);
 
 		addSong("Senpai-Erect", "senpai", 6, ["ERECT", "Week 6"]);
 		addSong("Roses-Erect", "senpai", 6, ["ERECT", "Week 6"]);
@@ -211,6 +219,7 @@ class FreeplayState extends MusicBeatState
 
 		//LIL BUDDIES :D
 
+		SaveManager.global();
 		if(FlxG.save.data.ee2 && Startup.hasEe2){
 			addSong("Lil-Buddies", "bf", 0, ["Secret"]);
 			addSong("Lil-Buddies-Erect", "bf", 0, [/*"ERECT",*/ "Secret"]);
@@ -328,7 +337,7 @@ class FreeplayState extends MusicBeatState
 			}
 		}
 
-		if(FlxG.keys.justPressed.ONE){ difficultyStars.setNumber(FlxG.random.int(0, 20)); }
+		//if(FlxG.keys.justPressed.ONE){ difficultyStars.setNumber(FlxG.random.int(0, 20)); }
 		
 		camFollow.x = Utils.fpsAdjsutedLerp(camFollow.x, camTarget.x, MainMenuState.lerpSpeed);
 		camFollow.y = Utils.fpsAdjsutedLerp(camFollow.y, camTarget.y, MainMenuState.lerpSpeed);
@@ -385,11 +394,11 @@ class FreeplayState extends MusicBeatState
 		clearPercentSprite.antialiasing = true;
 
 		scoreDisplay = new DigitDisplay(915, 120, "menu/freeplay/digital_numbers", 7, 0.4, -25);
-		scoreDisplay.setDigitOffset(1, 20);
+		scoreDisplay.setDigitOffset("1", 20);
 		scoreDisplay.ease = FlxEase.cubeOut;
 
 		percentDisplay = new DigitDisplay(1154, 87, "menu/freeplay/clearText", 3, 1, 3, 0, true);
-		percentDisplay.setDigitOffset(1, -8);
+		percentDisplay.setDigitOffset("1", -8);
 		percentDisplay.ease = FlxEase.quadOut;
 
 		albumDummy = new FlxObject(950, 285, 1, 1);
@@ -418,8 +427,7 @@ class FreeplayState extends MusicBeatState
 		difficulty.offset.set(difficulty.width/2, difficulty.height/2);
 		difficulty.antialiasing = true;
 
-		var fontLetters:String = "AaBbCcDdEeFfGgHhiIJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz:1234567890";
-		categoryTitle = new FlxBitmapText(FlxBitmapFont.fromMonospace(Paths.image("ui/resultFont"), fontLetters, FlxPoint.get(49, 62)));
+		categoryTitle = new FlxBitmapText(FlxBitmapFont.fromMonospace(Paths.image("ui/resultFont"), Utils.resultsTextCharacters, FlxPoint.get(49, 62)));
 		categoryTitle.text = categoryNames[curCategory];
 		categoryTitle.letterSpacing = -15;
 		categoryTitle.screenCenter(X);
@@ -484,6 +492,7 @@ class FreeplayState extends MusicBeatState
 		calcAvailableDifficulties();
 		updateScore();
 		updateAlbum(false);
+		updateSongDifficulty();
 
 		if(transitionFromMenu){
 			bg.x -= 1280;
@@ -768,9 +777,6 @@ class FreeplayState extends MusicBeatState
 			meta = Json.parse(Utils.getText("assets/data/" + _song.toLowerCase() + "/meta.json"));
 		}
 
-		//temp
-		if(meta.difficulties == null){ meta.difficulties = [0, 0, 0]; }
-
 		if(categories == null){ categories = ["All"]; }
 		var capsule:Capsule = new Capsule(_song, meta.name, _icon, _week, meta.album, meta.difficulties);
 		for(cat in categories){
@@ -792,6 +798,7 @@ class FreeplayState extends MusicBeatState
 			updateCapsulePosition(i);
 			categoryMap[categoryNames[curCategory]][i].snapToTargetPos();
 			categoryMap[categoryNames[curCategory]][i].showRank(curDifficulty);
+			//categoryMap[categoryNames[curCategory]][i].deslect();
 			capsuleGroup.add(categoryMap[categoryNames[curCategory]][i]);
 		}
 	}
@@ -839,6 +846,7 @@ class FreeplayState extends MusicBeatState
 
 		for(capsule in capsuleGroup){
 			capsule.showRank(curDifficulty);
+			//capsule.deslect();
 		}
 
 		updateScore();

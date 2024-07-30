@@ -30,6 +30,8 @@ class AnimationDebug extends FlxState
 	var animList:Array<String> = [];
 	var curAnim:Int = 0;
 	var daAnim:String = 'spooky';
+	var bgChar:String;
+	var bgMirrorFront:Bool = false;
 	var camFollow:FlxObject;
 
 	private var camHUD:FlxCamera;
@@ -40,10 +42,18 @@ class AnimationDebug extends FlxState
 
 	//var flippedChars:Array<String> = ["pico", "tankman"];
 
-	public function new(daAnim:String = 'spooky')
+	public function new(_character:String = 'spooky', _bgChar:String = null)
 	{
 		super();
-		this.daAnim = daAnim;
+		this.daAnim = _character;
+
+		if(_bgChar == null){
+			bgMirrorFront = true;
+			bgChar = _character;
+		}
+		else{
+			bgChar = _bgChar;
+		}
 	}
 
 	override function create()
@@ -66,7 +76,7 @@ class AnimationDebug extends FlxState
 		gridBG.screenCenter(XY);
 		add(gridBG);
 
-		dad = new Character(0, 0, daAnim, false, true);
+		dad = new Character(0, 0, daAnim, false, false, true);
 		dad.screenCenter();
 
 		var characterClass = Type.resolveClass("characters.data." + dad.charClass);
@@ -80,8 +90,7 @@ class AnimationDebug extends FlxState
 			}
 		}
 
-		dadBG = new Character(0, 0, daAnim, false, true);
-		dadBG.screenCenter();
+		dadBG = new Character(dad.x, dad.y, bgChar, false, false, true);
 		dadBG.alpha = 0.5;
 		dadBG.color = 0xFF000000;
 
@@ -192,10 +201,12 @@ class AnimationDebug extends FlxState
 		{
 			dad.playAnim(animList[curAnim], true);
 
-			if(animList[curAnim].endsWith("miss"))
-				dadBG.playAnim(animList[curAnim].substring(0, animList[curAnim].length - 4), true);
-			else
-				dadBG.idleEnd(true);
+			if(bgMirrorFront){
+				if(animList[curAnim].endsWith("miss"))
+					dadBG.playAnim(animList[curAnim].substring(0, animList[curAnim].length - 4), true);
+				else
+					dadBG.idleEnd(true);
+			}
 
 			updateTexts();
 			genBoyOffsets(false);
@@ -221,22 +232,26 @@ class AnimationDebug extends FlxState
 			//updateTexts();
 			if (upP){
 				dad.animOffsets.get(animList[curAnim])[1] += 1 * multiplier;
-				dadBG.animOffsets.get(animList[curAnim])[1] += 1 * multiplier;
+				if(bgMirrorFront)
+					dadBG.animOffsets.get(animList[curAnim])[1] += 1 * multiplier;
 			}
 				
 			if (downP){
 				dad.animOffsets.get(animList[curAnim])[1] -= 1 * multiplier;
-				dadBG.animOffsets.get(animList[curAnim])[1] -= 1 * multiplier;
+				if(bgMirrorFront)
+					dadBG.animOffsets.get(animList[curAnim])[1] -= 1 * multiplier;
 			}
 				
 			if (leftP){
 				dad.animOffsets.get(animList[curAnim])[0] += 1 * multiplier;
-				dadBG.animOffsets.get(animList[curAnim])[0] += 1 * multiplier;
+				if(bgMirrorFront)
+					dadBG.animOffsets.get(animList[curAnim])[0] += 1 * multiplier;
 			}
 				
 			if (rightP){
 				dad.animOffsets.get(animList[curAnim])[0] -= 1 * multiplier;
-				dadBG.animOffsets.get(animList[curAnim])[0] -= 1 * multiplier;
+				if(bgMirrorFront)
+					dadBG.animOffsets.get(animList[curAnim])[0] -= 1 * multiplier;
 			}
 
 			for(x in charInfo.info.anims){
@@ -269,7 +284,9 @@ class AnimationDebug extends FlxState
 				case label:
 					r += "addByLabel(\"" + x.name + "\", offset(" + dad.animOffsets.get(x.name)[0] + ", " + dad.animOffsets.get(x.name)[1] + "), \"" + x.data.prefix + "\", " + x.data.framerate + ", loop(" + x.data.loop.looped + ", " + x.data.loop.loopPoint + "));\n";
 				case start:
-					r += "addByFrame(\"" + x.name + "\", offset(" + dad.animOffsets.get(x.name)[0] + ", " + dad.animOffsets.get(x.name)[1] + "), \"" + x.data.frames[0] + "\", " + x.data.frames[1] + "\", " + x.data.framerate + ", loop(" + x.data.loop.looped + ", " + x.data.loop.loopPoint + "));\n";
+					r += "addByFrame(\"" + x.name + "\", offset(" + dad.animOffsets.get(x.name)[0] + ", " + dad.animOffsets.get(x.name)[1] + "), " + x.data.frames[0] + ", " + x.data.frames[1] + ", " + x.data.framerate + ", loop(" + x.data.loop.looped + ", " + x.data.loop.loopPoint + "));\n";
+				case startAtLabel:
+					r += "addByStartingAtLabel(\"" + x.name + "\", offset(" + dad.animOffsets.get(x.name)[0] + ", " + dad.animOffsets.get(x.name)[1] + "), \"" + x.data.prefix + "\", " + x.data.frames[0] + ", " + x.data.framerate + ", loop(" + x.data.loop.looped + ", " + x.data.loop.loopPoint + "));\n";
 			}
 		}
 
