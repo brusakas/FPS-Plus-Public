@@ -16,8 +16,8 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@latest
-      - uses: krdlab/setup-haxe@latest
+      - uses: actions/checkout@v2
+      - uses: krdlab/setup-haxe@v1
         with:
           haxe-version: latest
       # Runs a set of commands using the runners shell
@@ -41,7 +41,7 @@ jobs:
       - name: Compile
         run: |
           haxelib run lime build windows
-      - uses: actions/upload-artifact@latest
+      - uses: actions/upload-artifact@v2
         with:
           name: Windows Build
           path: export/release/windows/bin
