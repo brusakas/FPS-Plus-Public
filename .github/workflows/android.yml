@@ -31,10 +31,11 @@ jobs:
           
       - name: Setup Android SDK
         uses: android-actions/setup-android@v2
-
-      - uses: krdlab/setup-haxe@v1.5.1
+        
+      - name: Setup Haxe Environment
+      - uses: krdlab/setup-haxe@v1.4.0
         with:
-          haxe-version: 4.3.1
+          haxe-version: 4.2.5
           
       # Runs a set of commands using the runners shell
       - name: Install Haxe Libraries via hmm
