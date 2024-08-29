@@ -23,21 +23,12 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Install Haxelib
         run: |
-          haxelib --global install openfl
-          haxelib --global install lime
-          haxelib --global install flixel
-          haxelib --global install flixel-addons
-          haxelib --global install flixel-ui
-          haxelib --global install compiletime
-          haxelib --global install hxcpp
-          haxelib --global git flxanimate https://github.com/FunkinCrew/flxanimate
-          haxelib --global git funkin.vis https://github.com/FunkinCrew/funkVis
-          haxelib --global git grig.audio https://gitlab.com/haxe-grig/grig.audio.git
-          haxelib --global git hxCodec https://github.com/FunkinCrew/hxCodec 61b98a7a353b7f529a8fec84ed9afc919a2dffdd
-          haxelib list
+          haxelib install hmm --quiet
+          haxelib run hmm install --quiet
+          haxelib run lime rebuild hxcpp
       - name: Setup Lime
         run: |
-          haxelib run lime setup
+          haxelib run lime setup -alias -y
       - name: Compile
         run: |
           haxelib run lime build windows
