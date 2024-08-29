@@ -46,7 +46,7 @@ jobs:
       - name: Setup Lime
         run: |
           haxelib run lime setup -alias -y
-          haxelib run lime config ANDROID_SDK %LOCALAPPDATA%\Android\Sdk    
+          haxelib run lime config ANDROID_SDK %LOCALAPPDATA%\Android\Sdk/build-tools    
           haxelib run lime config ANDROID_NDK_ROOT %LOCALAPPDATA%\Android\Sdk\ndk\21.4.7075529
           haxelib run lime config JAVA_HOME %LOCALAPPDATA%\Android\Sdk\jdk\jdk-17.0.11+9
           haxelib run lime config ANDROID_SETUP true
