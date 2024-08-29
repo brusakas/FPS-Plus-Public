@@ -53,7 +53,7 @@ jobs:
     # Should accepted licenses be logged. If not, accepted licences will be accepted silently
           log-accepted-android-sdk-licenses: true # optional, default is true
     # Additional packages to install
-          packages: platform-tools, build-tools # optional, default is tools platform-tools
+          packages: platform-tools build-tools # optional, default is tools platform-tools
           
         
       - name: Setup Haxe environment
