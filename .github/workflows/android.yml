@@ -32,7 +32,6 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v2
 
-      - name: Install Haxe
       - uses: krdlab/setup-haxe@v1.5.1
         with:
           haxe-version: 4.3.1
