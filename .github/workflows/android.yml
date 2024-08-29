@@ -51,9 +51,9 @@ jobs:
     # Android SDK is usable only after the license agreement. Should setup-android agree to the licences, provided by "sdkmanager --licenses"
           accept-android-sdk-licenses: true # optional, default is true
     # Should accepted licenses be logged. If not, accepted licences will be accepted silently
-          log-accepted-android-sdk-licenses: true # optional, default is true
+          log-accepted-android-sdk-licenses: false # optional, default is true
     # Additional packages to install
-          packages: platform-tools build-tools # optional, default is tools platform-tools
+          packages: platform-tools tools # optional, default is tools platform-tools
           
         
       - name: Setup Haxe environment
